@@ -1,9 +1,13 @@
 package com.example.carservice.service;
 
-import com.example.DTO.CarDTO;
+import com.example.carservice.DTO.BookingDTO;
+import com.example.carservice.DTO.CarDTO;
+import com.example.carservice.kafka.bookingProducerREMOVE.BookingProducer;
+import com.example.carservice.kafka.carProducer.CarProducer;
 import com.example.carservice.model.Booking;
 import com.example.carservice.model.Car;
 import com.example.carservice.repository.CarRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,9 +20,18 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Slf4j
 public class CarService {
 
     private static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+    private CarProducer carProducer;
+
+    @Autowired
+    public CarService(CarProducer carProducer) {
+        this.carProducer = carProducer;
+    }
+
     @Autowired
     CarRepository carRepository;
 
@@ -30,7 +43,6 @@ public class CarService {
         Date returnDate = new SimpleDateFormat(DATE_TIME_FORMAT).parse(returndate + " " + returnhour);
         List<Car> availableCars = new ArrayList<>();
         for (Car car : cars) {
-            //TODO get bookings from bookingService and store in database, THEN access database to get them
             List<Booking> bookings = car.getBookings();
             boolean carAvailable = bookings.stream().allMatch(b -> isNotInRange(b.getStartDate(), pickupDate, returnDate) && isNotInRange(b.getEndDate(), pickupDate, returnDate) || (b.isReturned()));
             if (carAvailable) {
@@ -39,6 +51,19 @@ public class CarService {
         }
         availableCars.forEach(car -> carsDTOS.add(convertCarToCarDTO(car, currency)));
         return carsDTOS;
+    }
+
+    @Transactional(readOnly = true)
+    public List<CarDTO> getAllCars() {
+        List<CarDTO> carsDTOS = new ArrayList<>();
+        List<Car> cars = carRepository.findAll();
+        cars.forEach(car -> carsDTOS.add(convertCarToCarDTO(car, car.getCurrency())));
+        return carsDTOS;
+    }
+
+    public void sendMessage(CarDTO message) {
+        log.info("[CarService] send car to topic");
+        carProducer.send(message);
     }
 
     private boolean isNotInRange(Date date, Date startDate, Date endDate) {
