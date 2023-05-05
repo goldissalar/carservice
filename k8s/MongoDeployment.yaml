@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: se-car-mongo
+spec:
+  selector:
+    matchLabels:
+      app: se-car-mongo
+  template:
+    metadata:
+      labels:
+        app: se-car-mongo
+    spec:
+      containers:
+        - name: se-car-mongo
+          image: mongo:latest
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: storage
+              mountPath: /data/db
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: se-car-mongo-pvc

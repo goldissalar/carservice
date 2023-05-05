@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: se-car
+spec:
+  selector:
+    app: se-car
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080

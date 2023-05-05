@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: se-car
+spec:
+  selector:
+    matchLabels:
+      app: se-car
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: se-car
+    spec:
+      containers:
+        - name: se-car
+          image: se-car-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MONGO_URL
+              value: mongodb://se-car-mongo:27017/dev

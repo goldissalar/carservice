@@ -1,6 +1,19 @@
 version: '3'
 
 services:
+  mongo:
+    image: mongo:latest
+    container_name: docker-mongo
+    ports:
+      - "27017:27017"
+  car:
+    image: goldissalar/se-car-service:latest
+    depends_on:
+      - mongo
+    container_name: car
+    build: .
+    ports:
+      - "8080:8080"
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:
