@@ -19,7 +19,7 @@ spec:
           ports:
             - containerPort: 8080
           env:
-            - name: MONGO_PORT
-              value: 27017
-            - name: MONGO_IP
-              value: se-car-mongo
+            - name: MONGO_URL
+              value: mongodb://se-car-mongo:27017/dev
+            - name: KAFKA_URL
+              value: se-kafka:9092
