@@ -3,9 +3,9 @@ kind: Service
 metadata:
   name: se-car
 spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8080
   selector:
     app: se-car
-  ports:
-    - port: 8080
-      protocol: TCP
-      targetPort: 8080
