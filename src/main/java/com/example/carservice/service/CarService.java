@@ -84,9 +84,9 @@ public class CarService {
 
         // Create a request message
         ConverterOuterClass.ConvertRequest request = ConverterOuterClass.ConvertRequest.newBuilder()
-                .setAmount(100.0)
-                .setFrom("USD")
-                .setTo("EUR")
+                .setAmount(amount)
+                .setFrom(from)
+                .setTo(to)
                 .build();
 
         // Call the gRPC service and get the response
@@ -108,5 +108,4 @@ public class CarService {
         carsDTO.setDailyRate(convertCurrency(car.getDailyRate(), car.getCurrency(), currency));
         return carsDTO;
     }
-
 }
