@@ -24,7 +24,7 @@ public class CarDTO implements Serializable {
 
     private String currency;
 
-    private BigDecimal dailyRate;
+    private Double dailyRate;
 
     @Override
     public String toString() {

@@ -7,6 +7,10 @@ import com.example.carservice.kafka.carProducer.CarProducer;
 import com.example.carservice.model.Booking;
 import com.example.carservice.model.Car;
 import com.example.carservice.repository.CarRepository;
+import currencyConverter.ConverterGrpc;
+import currencyConverter.ConverterOuterClass;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,15 +71,33 @@ public class CarService {
     }
 
     private boolean isNotInRange(Date date, Date startDate, Date endDate) {
-        return !(date.after(startDate) && date.before(endDate));
+        //TODO: fix this
+        return date.before(startDate) || date.after(endDate);
     }
 
-    //todo currency service call
-    /*private BigDecimal convertCurrency(BigDecimal amount, String from, String to) {
-        mypackage.WebService1Soap service = new WebService1().getPort(WebService1Soap.class);
-        return service.convertCurrency(amount, from, to);
+    private Double convertCurrency(Double amount, String from, String to) {
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("grpccurrencyconvertercode.azurewebsites.net", 443)
+                .useTransportSecurity()
+                .build();
+
+        // Create a gRPC stub for the Converter service
+        ConverterGrpc.ConverterBlockingStub stub = ConverterGrpc.newBlockingStub(channel);
+
+        // Create a request message
+        ConverterOuterClass.ConvertRequest request = ConverterOuterClass.ConvertRequest.newBuilder()
+                .setAmount(amount)
+                .setFrom(from)
+                .setTo(to)
+                .build();
+
+        // Call the gRPC service and get the response
+        ConverterOuterClass.ConvertReply response = stub.converter(request);
+
+        // Shutdown the channel
+        channel.shutdown();
+        return response.getResult();
         //return BigDecimal.valueOf(50);
-    }*/
+    }
 
     private CarDTO convertCarToCarDTO(Car car, String currency) {
         CarDTO carsDTO = new CarDTO();
@@ -84,14 +106,7 @@ public class CarService {
         carsDTO.setModel(car.getModel());
         carsDTO.setYear(car.getYear());
         carsDTO.setCurrency(currency);
-        //todo currency??
-        carsDTO.setDailyRate(BigDecimal.valueOf(car.getDailyRate()));
+        carsDTO.setDailyRate(convertCurrency(car.getDailyRate(), car.getCurrency(), currency));
         return carsDTO;
-    }
-
-    public void deleteAll() {
-
-        carRepository.deleteAll();
-
     }
 }
