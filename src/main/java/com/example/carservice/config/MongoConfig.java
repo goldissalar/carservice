@@ -26,8 +26,8 @@ public class MongoConfig {
     @Bean
     CommandLineRunner commandLineRunner(CarRepository carRepository, BookingRepository bookingRepository) {
         return strings -> {
-            carRepository.save(new Car(1, "Audi", "A1", "2013", "USD", 80, createBookings(bookingRepository, "2023-04-16" + " " + "22:00:00", "2023-04-17" + " " + "14:16:16", 1)));
-            carRepository.save(new Car(2, "Audi", "A2", "2013", "USD", 90, createBookings(bookingRepository, "2023-04-18" + " " + "20:00:00", "2023-04-19" + " " + "16:16:16", 2)));
+            carRepository.save(new Car(1, "Audi", "A1", "2013", "USD", 80d, createBookings(bookingRepository, "2023-04-16" + " " + "22:00:00", "2023-04-17" + " " + "14:16:16", 1)));
+            carRepository.save(new Car(2, "Audi", "A2", "2013", "USD", 90d, createBookings(bookingRepository, "2023-04-18" + " " + "20:00:00", "2023-04-19" + " " + "16:16:16", 2)));
         };
     }
 

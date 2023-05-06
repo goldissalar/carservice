@@ -20,7 +20,7 @@ public class Car {
     private String model;
     private String year;
     private String currency;
-    private int dailyRate;
+    private Double dailyRate;
     @DBRef
     List<Booking> bookings;
 }
