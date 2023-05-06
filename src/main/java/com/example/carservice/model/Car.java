@@ -21,6 +21,7 @@ public class Car {
     private String year;
     private String currency;
     private int dailyRate;
+
     @DBRef
-    List<Booking> bookings;
+    Booking booking;
 }

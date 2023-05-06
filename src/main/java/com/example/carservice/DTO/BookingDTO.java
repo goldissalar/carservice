@@ -14,23 +14,18 @@ public class BookingDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = -3965748134914559751L;
 
-    private int bookingId;
+    private String bookingId;
 
-    private Date startDate;
-
-    private Date endDate;
-
-    private boolean returned;
+    private String userId;
 
     private int carId;
 
-    @Override
-    public String toString() {
-        return "BookingDTO{" +
-                "bookingId=" + bookingId +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", returned=" + returned +
-                '}';
-    }
+    private String pickupDate;
+
+    private String pickupHour;
+
+    private String returnDate;
+
+    private String returnHour;
+
 }

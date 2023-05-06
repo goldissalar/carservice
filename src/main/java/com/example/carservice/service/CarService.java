@@ -43,8 +43,8 @@ public class CarService {
         Date returnDate = new SimpleDateFormat(DATE_TIME_FORMAT).parse(returndate + " " + returnhour);
         List<Car> availableCars = new ArrayList<>();
         for (Car car : cars) {
-            List<Booking> bookings = car.getBookings();
-            boolean carAvailable = bookings.stream().allMatch(b -> isNotInRange(b.getStartDate(), pickupDate, returnDate) && isNotInRange(b.getEndDate(), pickupDate, returnDate) || (b.isReturned()));
+            Booking b = car.getBooking();
+            boolean carAvailable = isNotInRange(b.getStartDate(), pickupDate, returnDate) && isNotInRange(b.getEndDate(), pickupDate, returnDate) || (b.isReturned());
             if (carAvailable) {
                 availableCars.add(car);
             }
@@ -67,7 +67,7 @@ public class CarService {
     }
 
     private boolean isNotInRange(Date date, Date startDate, Date endDate) {
-        return date.before(startDate) || date.after(endDate);
+        return !(date.after(startDate) && date.before(endDate));
     }
 
     //todo currency service call
@@ -89,4 +89,9 @@ public class CarService {
         return carsDTO;
     }
 
+    public void deleteAll() {
+
+        carRepository.deleteAll();
+
+    }
 }
