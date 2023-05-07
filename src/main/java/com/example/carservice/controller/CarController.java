@@ -1,20 +1,19 @@
 package com.example.carservice.controller;
 
-import com.example.carservice.DTO.BookingDTO;
 import com.example.carservice.DTO.CarDTO;
 import com.example.carservice.kafka.bookingProducerREMOVE.BookingService;
 import com.example.carservice.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CarController {
     @Autowired
     CarService carService;
