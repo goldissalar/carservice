@@ -35,9 +35,9 @@ public class BookingListener {
             Date pickupDate = new SimpleDateFormat(DATE_TIME_FORMAT).parse(bookingDTO.getPickupDate());
             Date returnDate = new SimpleDateFormat(DATE_TIME_FORMAT).parse(bookingDTO.getReturnDate());
 
-            Booking booking = new Booking(bookingDTO.getBookingId(), bookingDTO.getCarId(), pickupDate, returnDate, false);
+            Booking booking = new Booking(bookingDTO.getBookingId(), pickupDate, returnDate, false);
             bookingRepository.save(booking);
-            car.get().setBooking(booking);
+            car.get().getBookings().add(booking);
             carRepository.save(car.get());
         }
     }

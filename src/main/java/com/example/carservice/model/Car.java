@@ -22,5 +22,5 @@ public class Car {
     private String currency;
     private Double dailyRate;
     @DBRef
-    Booking booking;
+    List<Booking> bookings;
 }

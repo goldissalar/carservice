@@ -26,17 +26,18 @@ public class MongoConfig {
     @Bean
     CommandLineRunner commandLineRunner(CarRepository carRepository, BookingRepository bookingRepository) {
         return strings -> {
-            carRepository.save(new Car(1, "Audi", "A1", "2013", "USD", 80d, createBookings(bookingRepository, "2023-04-16" + " " + "22:00:00", "2023-04-17" + " " + "14:16:16", "1", 1)));
-            carRepository.save(new Car(2, "Audi", "A2", "2013", "USD", 90d, createBookings(bookingRepository, "2023-04-18" + " " + "20:00:00", "2023-04-19" + " " + "16:16:16", "2", 2)));
+            carRepository.save(new Car(1, "Audi", "A1", "2013", "USD", 80d, createBookings(bookingRepository, "2023-04-16" + " " + "22:00:00", "2023-04-17" + " " + "14:16:16", "1")));
+            carRepository.save(new Car(2, "Audi", "A2", "2013", "USD", 90d, createBookings(bookingRepository, "2023-04-18" + " " + "20:00:00", "2023-04-19" + " " + "16:16:16", "2")));
         };
     }
 
-    private Booking createBookings(BookingRepository bookingRepository, String startTime, String endTime, String bookingId, int carId) throws ParseException {
+    private List<Booking> createBookings(BookingRepository bookingRepository, String startTime, String endTime, String bookingId) throws ParseException {
         Date pickupDate = new SimpleDateFormat(DATE_TIME_FORMAT).parse(startTime);
         Date returnDate = new SimpleDateFormat(DATE_TIME_FORMAT).parse(endTime);
-        Booking booking = new Booking(bookingId, carId, pickupDate, returnDate, false);
+        Booking booking = new Booking(bookingId, pickupDate, returnDate, false);
         Booking savedBooking = bookingRepository.save(booking);
-
-        return savedBooking;
+        List<Booking> bookingsForCar = new ArrayList<>();
+        bookingsForCar.add(savedBooking);
+        return bookingsForCar;
     }
 }

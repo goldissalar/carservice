@@ -37,7 +37,7 @@ public class ReturningListener {
 
             if (booking.isPresent()) {
                 booking.get().setReturned(true);
-                car.get().setBooking(booking.get());
+                car.get().getBookings().add(booking.get());
                 bookingRepository.save(booking.get());
                 carRepository.save(car.get());
             }

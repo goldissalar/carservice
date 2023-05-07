@@ -1,8 +1,6 @@
 package com.example.carservice.service;
 
-import com.example.carservice.DTO.BookingDTO;
 import com.example.carservice.DTO.CarDTO;
-import com.example.carservice.kafka.bookingProducerREMOVE.BookingProducer;
 import com.example.carservice.kafka.carProducer.CarProducer;
 import com.example.carservice.model.Booking;
 import com.example.carservice.model.Car;
@@ -16,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,9 +44,8 @@ public class CarService {
         Date returnDate = new SimpleDateFormat(DATE_TIME_FORMAT).parse(returndate + " " + returnhour);
         List<Car> availableCars = new ArrayList<>();
         for (Car car : cars) {
-            Booking b = car.getBooking();
-            //TODO: Check if this works with only one booking object, eg. case: no booking yet set.
-            boolean carAvailable = isNotInRange(b.getStartDate(), pickupDate, returnDate) && isNotInRange(b.getEndDate(), pickupDate, returnDate) || (b.isReturned());
+            List<Booking> bookings = car.getBookings();
+            boolean carAvailable = bookings.stream().allMatch(b -> isNotInRange(b.getStartDate(), pickupDate, returnDate) && isNotInRange(b.getEndDate(), pickupDate, returnDate) || (b.isReturned()));
             if (carAvailable) {
                 availableCars.add(car);
             }
