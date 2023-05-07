@@ -1,6 +1,7 @@
 package com.example.carservice.service;
 
 import com.example.carservice.DTO.CarDTO;
+import com.example.carservice.exception.CarNotFoundException;
 import com.example.carservice.kafka.carProducer.CarProducer;
 import com.example.carservice.model.Booking;
 import com.example.carservice.model.Car;
@@ -19,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -52,6 +54,22 @@ public class CarService {
         }
         availableCars.forEach(car -> carsDTOS.add(convertCarToCarDTO(car, currency)));
         return carsDTOS;
+    }
+
+    @Transactional(readOnly = true)
+    public CarDTO findCarById(int carId) throws CarNotFoundException {
+        Optional<Car> car = carRepository.findById(carId);
+        if (car.isPresent()) {
+            CarDTO carDTO = new CarDTO();
+            carDTO.setCarId(car.get().getId());
+            carDTO.setMake(car.get().getMake());
+            carDTO.setModel(car.get().getModel());
+            carDTO.setYear(car.get().getYear());
+            carDTO.setCurrency(car.get().getCurrency());
+            return carDTO;
+        } else {
+            throw new CarNotFoundException("Car with Id " + carId + " not found");
+        }
     }
 
     @Transactional(readOnly = true)
