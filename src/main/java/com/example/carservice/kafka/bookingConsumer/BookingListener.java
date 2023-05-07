@@ -31,10 +31,8 @@ public class BookingListener {
         log.info("Get request from booking topic " + bookingDTO.toString());
         Optional<Car> car = carRepository.findById(bookingDTO.getCarId());
         if (car.isPresent()) {
-
-            Date pickupDate = new SimpleDateFormat(DATE_TIME_FORMAT).parse(bookingDTO.getPickupDate());
-            Date returnDate = new SimpleDateFormat(DATE_TIME_FORMAT).parse(bookingDTO.getReturnDate());
-
+            Date pickupDate = new SimpleDateFormat(DATE_TIME_FORMAT).parse(bookingDTO.getPickupDate() + " " + bookingDTO.getPickupHour());
+            Date returnDate = new SimpleDateFormat(DATE_TIME_FORMAT).parse(bookingDTO.getReturnDate() + " " + bookingDTO.getReturnHour());
             Booking booking = new Booking(bookingDTO.getBookingId(), pickupDate, returnDate, false);
             bookingRepository.save(booking);
             car.get().getBookings().add(booking);
