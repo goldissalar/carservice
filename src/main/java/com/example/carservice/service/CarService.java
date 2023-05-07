@@ -47,8 +47,9 @@ public class CarService {
         Date returnDate = new SimpleDateFormat(DATE_TIME_FORMAT).parse(returndate + " " + returnhour);
         List<Car> availableCars = new ArrayList<>();
         for (Car car : cars) {
-            List<Booking> bookings = car.getBookings();
-            boolean carAvailable = bookings.stream().allMatch(b -> isNotInRange(b.getStartDate(), pickupDate, returnDate) && isNotInRange(b.getEndDate(), pickupDate, returnDate) || (b.isReturned()));
+            Booking b = car.getBooking();
+            //TODO: Check if this works with only one booking object, eg. case: no booking yet set.
+            boolean carAvailable = isNotInRange(b.getStartDate(), pickupDate, returnDate) && isNotInRange(b.getEndDate(), pickupDate, returnDate) || (b.isReturned());
             if (carAvailable) {
                 availableCars.add(car);
             }
@@ -70,8 +71,8 @@ public class CarService {
         carProducer.send(message);
     }
 
-    private boolean isNotInRange(Date date, Date startDate, Date endDate) {
-        return date.before(startDate) || date.after(endDate);
+    public boolean isNotInRange(Date date, Date startdate, Date enddate) {
+        return date.after(enddate) || date.before(startdate);
     }
 
     private Double convertCurrency(Double amount, String from, String to) {

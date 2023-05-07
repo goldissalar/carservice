@@ -15,8 +15,14 @@ import java.util.Date;
 @AllArgsConstructor
 public class Booking {
     @Id
-    private int id;
+    private String id;
+
+    private int carId;
     private Date startDate;
     private Date endDate;
     private boolean returned;
+
+    public Booking() {
+
+    }
 }
